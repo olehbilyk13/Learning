@@ -1,0 +1,507 @@
+{
+	"info": {
+		"_postman_id": "90af6a85-51f5-422b-8ac4-5ff64b72f0f9",
+		"name": "HOMEWORK",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Авторизація_Автентифікація",
+			"item": [
+				{
+					"name": "Як вставити авторизаційний токен",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.nasa.gov/planetary/apod?api_key=ADnN4OI8Jfo6WsZgnLo2yNxuxn6zr8SYTxPUFRVo&date=2020-12-19&hd=False",
+							"protocol": "https",
+							"host": [
+								"api",
+								"nasa",
+								"gov"
+							],
+							"path": [
+								"planetary",
+								"apod"
+							],
+							"query": [
+								{
+									"key": "api_key",
+									"value": "ADnN4OI8Jfo6WsZgnLo2yNxuxn6zr8SYTxPUFRVo"
+								},
+								{
+									"key": "hd",
+									"value": "True",
+									"disabled": true
+								},
+								{
+									"key": "date",
+									"value": "2020-12-19"
+								},
+								{
+									"key": "hd",
+									"value": "False"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "basic auth",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "password",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "postman",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://postman-echo.com/basic-auth?Authorization=cG9zdG1hbjpwYXNzd29yZA==",
+							"protocol": "https",
+							"host": [
+								"postman-echo",
+								"com"
+							],
+							"path": [
+								"basic-auth"
+							],
+							"query": [
+								{
+									"key": "Authorization",
+									"value": "cG9zdG1hbjpwYXNzd29yZA=="
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Операції з юзерами",
+			"item": [
+				{
+					"name": "Create user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"oleh\",\r\n    \"job\": \"dev\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://reqres.in/api/users",
+							"protocol": "https",
+							"host": [
+								"reqres",
+								"in"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\"userId\", jsonData.id);\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"postman.setNextRequest(\"Delete user\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{name}}\",\r\n    \"job\": \"{{job}}\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://reqres.in/api/users",
+							"protocol": "https",
+							"host": [
+								"reqres",
+								"in"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"postman.setNextRequest(null);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://reqres.in/api/users/{{userId}}",
+							"protocol": "https",
+							"host": [
+								"reqres",
+								"in"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Total numbers of page\", function() {\r",
+									"    var jsonData = pm.response.json(); \r",
+									"\r",
+									"pm.expect(jsonData.total_pages).to.equal(2);\r",
+									"// pm.expect(jsonData.total_pages).to.equal(22222);\r",
+									"\r",
+									"});\r",
+									"\r",
+									"pm.test(\"check user with registrated email\", function() {\r",
+									"    var jsonData = pm.response.json();\r",
+									"\r",
+									"    pm.expect(jsonData.data[0].email).to.equal(pm.environment.get(\"email\"));\r",
+									"    /*pm.expect(jsonData.data[1].email).to.equal(pm.environment.get(\"email\")); для кейсу якщо підряд зареєстровані*/\r",
+									"});\r",
+									"\r",
+									"pm.test(\"check user with registrated email\", function() {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    var email = pm.environment.get(\"email\")\r",
+									"    pm.expect(jsonData.data[0].email).to.equal(email);\r",
+									"    console.log(\"this is our email \" + email); \r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"total numbers of per_page\", function() {\r",
+									"    var jsonData = pm.response.json();\r",
+									"\r",
+									"    pm.expect(jsonData.per_page).to.equal(6);\r",
+									"\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check first name\", function() {\r",
+									"    var jsonData = pm.response.json();\r",
+									"\r",
+									"   pm.expect(jsonData.data[0].first_name).to.equal(\"George\"); \r",
+									"\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check last name as Morris\", function() {\r",
+									"    var jsonOleh = pm.response.json();\r",
+									"\r",
+									"    pm.expect(jsonOleh.data[4].last_name).to.equal(\"Morris\");\r",
+									"\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check text in support\", function() {\r",
+									"    var supportJson = pm.response.json();\r",
+									"\r",
+									"pm.expect(supportJson.support.text).to.equal(\"To keep ReqRes free, contributions towards server costs are appreciated!\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"check user`s avatar\", function() {\r",
+									"    var avatarJson = pm.response.json();\r",
+									"\r",
+									"pm.expect(avatarJson.data[5]).to.have.property(\"avatar\");\r",
+									"\r",
+									"});\r",
+									"\r",
+									"pm.test(\"check user`s avatar isn`t null\", function() {\r",
+									"    var avatarJson = pm.response.json();\r",
+									"\r",
+									"pm.expect(avatarJson.data[5]).not.equal(\"\");\r",
+									"\r",
+									"});\r",
+									"\r",
+									"postman.setNextRequest(\"delete user\");\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"console.log(\"run list users\");\r",
+									"console.info(\"this is info\");\r",
+									"console.warn(\"this is warning\");\r",
+									"console.error(\"this is error\")\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{TEST}}/api/users?page=1",
+							"host": [
+								"{{TEST}}"
+							],
+							"path": [
+								"api",
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Swapi",
+			"item": [
+				{
+					"name": "Find Ord Mantell",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check name of planet\", function() {\r",
+									"    var jsonSwapi = pm.response.json();\r",
+									"\r",
+									"    pm.expect(jsonSwapi.results[6].name).to.equal(\"Ord Mantell\");\r",
+									"    /*pm.expect(jsonSwapi.results[6].name).to.equal(\"111Ord Mantell\");*/\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://swapi.dev/api/planets/?page=3",
+							"protocol": "http",
+							"host": [
+								"swapi",
+								"dev"
+							],
+							"path": [
+								"api",
+								"planets",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Film schema",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var swapiFilms = JSON.parse(responseBody);\r",
+									"\r",
+									"var schema = { \r",
+									"    \"type\": \"object\",  \r",
+									"    required: [\r",
+									"        \"characters\", \"planets\" ,\"starships\", \"vehicles\", \"species\"\r",
+									"    ],\r",
+									"    \"properties\": {              \r",
+									"        \"characters\": {\r",
+									"            \"type\": \"array\",\r",
+									"            \"items\": {\"type\": \"string\"}\r",
+									"            },\r",
+									"        \"planets\": {\r",
+									"            \"type\": \"array\",\r",
+									"            \"items\": {\"type\": \"string\"}\r",
+									"        },\r",
+									"        \"starships\": {\r",
+									"            \"type\": \"array\",\r",
+									"            \"items\": {\"type\": \"string\"}\r",
+									"            },\r",
+									"        \"vehicles\": {\r",
+									"            \"type\": \"array\",\r",
+									"            \"items\": {\"type\": \"string\"}\r",
+									"        },\r",
+									"        \"species\": {\r",
+									"            \"type\": \"array\",\r",
+									"            \"items\": {\"type\": \"string\"}\r",
+									"        }        \r",
+									"    }\r",
+									"};\r",
+									"\r",
+									"pm.test(\"body is corrrect\", function() {\r",
+									"    pm.expect(tv4.validate(swapiFilms, schema)).to.be.true;    \r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://swapi.dev/api/films/2/",
+							"protocol": "http",
+							"host": [
+								"swapi",
+								"dev"
+							],
+							"path": [
+								"api",
+								"films",
+								"2",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Minfin",
+			"item": [
+				{
+					"name": "Minfin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check slug name\", function() {\r",
+									"    var jsonMinfin = pm.response.json();\r",
+									"\r",
+									"    pm.expect(jsonMinfin[0].cities[5].village[4].slug.jpan).to.equal(\"Goshha\");\r",
+									"    });\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://minfin.com.ua/api/cities/?region_number=15",
+							"protocol": "https",
+							"host": [
+								"minfin",
+								"com",
+								"ua"
+							],
+							"path": [
+								"api",
+								"cities",
+								""
+							],
+							"query": [
+								{
+									"key": "region_number",
+									"value": "15"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
