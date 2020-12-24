@@ -1,0 +1,236 @@
+{
+	"info": {
+		"_postman_id": "62fbe086-f417-46da-b8bc-0dfa7a41917b",
+		"name": "Learning Postman",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "APOD NASA",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.nasa.gov/planetary/apod?api_key=ADnN4OI8Jfo6WsZgnLo2yNxuxn6zr8SYTxPUFRVo",
+					"protocol": "https",
+					"host": [
+						"api",
+						"nasa",
+						"gov"
+					],
+					"path": [
+						"planetary",
+						"apod"
+					],
+					"query": [
+						{
+							"key": "api_key",
+							"value": "ADnN4OI8Jfo6WsZgnLo2yNxuxn6zr8SYTxPUFRVo"
+						},
+						{
+							"key": "date",
+							"value": "199",
+							"disabled": true
+						},
+						{
+							"key": "hd",
+							"value": "True",
+							"disabled": true
+						},
+						{
+							"key": "hd",
+							"value": "False",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2 lesson",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "password",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "postman",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic cG9zdG1hbjpwYXNzd29yZA==",
+						"type": "text"
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "https://postman-echo.com/basic-auth",
+					"protocol": "https",
+					"host": [
+						"postman-echo",
+						"com"
+					],
+					"path": [
+						"basic-auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "main swapi",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// 1. Correct response format Json\r",
+							"pm.test(\"Correct response format Json\",function() {\r",
+							"pm.response.to.have.jsonBody()\r",
+							"}); \r",
+							"\r",
+							"// 2. Check declarated fields\r",
+							"pm.test(\"Check declarated fields\", function() {\r",
+							"    const jsonData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(jsonData).to.have.property(\"people\");\r",
+							"    pm.expect(jsonData).to.have.property(\"planets\");\r",
+							"    pm.expect(jsonData).to.have.property(\"films\");\r",
+							"    pm.expect(jsonData).to.have.property(\"species\");\r",
+							"    pm.expect(jsonData).to.have.property(\"vehicles\");\r",
+							"    pm.expect(jsonData).to.have.property(\"starships\")\r",
+							"});\r",
+							"\r",
+							"// 3. Check fields value isn`t null\r",
+							"pm.test(\"Check fields value isn`t null\", function() {\r",
+							"    var jsonData = pm.response.json();\r",
+							"\r",
+							"    // pm.expect(jsonData.people).is.equal(null); \r",
+							"        /* для перевірки фейлд тесту */\r",
+							"    pm.expect(jsonData.people).not.equal(null);\r",
+							"    pm.expect(jsonData.planets).not.equal(null);\r",
+							"    pm.expect(jsonData.starships).not.equal(null);\r",
+							"    pm.expect(jsonData.films).not.equal(null);\r",
+							"    pm.expect(jsonData.species).not.equal(null);\r",
+							"    pm.expect(jsonData.vehicles).not.equal(null); \r",
+							"});\r",
+							"\r",
+							"// 4. Check fields value isn`t empty\r",
+							"pm.test(\"Check fields value isn`t empty\", function() {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    // var empty = \"http://swapi.dev/api/people/\";\r",
+							"    var empty = \"\";\r",
+							"\r",
+							"    pm.expect(jsonData.people).not.equal(empty);\r",
+							"    pm.expect(jsonData.planets).not.equal(empty);\r",
+							"    pm.expect(jsonData.films).not.equal(empty);\r",
+							"    pm.expect(jsonData.species).not.equal(empty);\r",
+							"    pm.expect(jsonData.vehicles).not.equal(empty);\r",
+							"    pm.expect(jsonData.starships).not.equal(empty);\r",
+							"});\r",
+							"\r",
+							"// 5.Check if field corresponds to a specific value \r",
+							"    pm.test(\"Check if field corresponds to a specific value\", function() {\r",
+							"        var jsonData = pm.response.json();\r",
+							"\r",
+							"        pm.expect(jsonData.people).to.equal(\"http://swapi.dev/api/people/\");\r",
+							"        // pm.expect(jsonData.people).to.equal(\"http://swapi.dev/api/people/hghg\");\r",
+							"        pm.expect(jsonData.films).to.equal(\"http://swapi.dev/api/films/\");\r",
+							"        pm.expect(jsonData.planets).to.equal(\"http://swapi.dev/api/planets/\");\r",
+							"        pm.expect(jsonData.species).to.equal(\"http://swapi.dev/api/species/\");\r",
+							"        pm.expect(jsonData.vehicles).to.equal(\"http://swapi.dev/api/vehicles/\");\r",
+							"        pm.expect(jsonData.starships).to.equal(\"http://swapi.dev/api/starships/\");\r",
+							"    });\r",
+							"\r",
+							"    // 6. Check status code is 200\r",
+							"    pm.test(\"Check status code is 200\", function() {\r",
+							"        pm.response.to.have.status(200);\r",
+							"        // pm.response.to.have.status(201);\r",
+							"    })\r",
+							"\r",
+							"    // 7. check status message is OK\r",
+							"    pm.test(\"check status message is OK\", function() {\r",
+							"        pm.response.to.have.status(\"OK\");\r",
+							"        // pm.response.to.have.status(\"OKI\");\r",
+							"    });\r",
+							"\r",
+							"    // 8. Check response time is less than 1000\r",
+							"pm.test(\"Check response time is less than 1000\", function() {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+							"    // pm.expect(pm.response.responseTime).to.be.below(10);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"// 9. Check headers response\r",
+							"pm.test(\"Check headers response\", function() {\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"    // pm.response.to.have.header(\"Content-Typesad\");\r",
+							"});\r",
+							"\r",
+							"// 10. check the headers value is application/json\r",
+							"pm.test(\"check the headers value is application/json\", function() {\r",
+							"    pm.response.to.have.header(\"Content-Type\",\"application/json\");\r",
+							"    // pm.response.to.have.header(\"Content-Type\",\"application/jsondsadsd\");\r",
+							"});\r",
+							"\r",
+							"// 11.check that cookies exist\r",
+							"pm.test(\"check that cookies exist\", function() {\r",
+							"\r",
+							"})\r",
+							"\r",
+							"// 11. check that cookies exist\r",
+							"pm.test(\"check that cookies exist\", function() {\r",
+							"    pm.cookies.has(\"__cfduid\");\r",
+							"});\r",
+							"\r",
+							"// 12. check that cookies has value\r",
+							"pm.test(\"check that cookies has value\", function() {\r",
+							"    try {\r",
+							"        var myCookie = pm.cookies.get(\"__cfduid\");\r",
+							"        console.log(myCookie);\r",
+							"    } catch(e) {\r",
+							"        console.log(\"some problem with cookie - >\" + e)\r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://swapi.dev/api/",
+					"protocol": "https",
+					"host": [
+						"swapi",
+						"dev"
+					],
+					"path": [
+						"api",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
